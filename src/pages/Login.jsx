@@ -1,56 +1,49 @@
-import { Text, Image, Pressable, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Text, Image, Pressable, TouchableOpacity, View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
+import {useEffect, useState} from 'react';
+import styled from 'styled-components/native';
+import backgroundImage from '../assets/mobileBg.png'
+import InputProps from '../components/Input.jsx';
+import InputPropsSecure from '../components/InputSecure.jsx';
+import Button from '../components/Button.jsx'
+import * as Font from 'expo-font';
 
-function Login(){
-    return(
-        <View style={style.container}>
-            <Image style={style.img} source={require ('../assets/toothless-dancing.gif')}/>
-                  <Text style={style.title}>Hello World</Text>
-                  <View style={style.btnContainer}>
-                    <Pressable style={({pressed}) =>[style.btn, pressed && style.pressed]}>
-                      <Text>Cadastro</Text>
-                    </Pressable>
-                    <TouchableOpacity style={style.btn}>
-                      <Text>Login</Text>
-                    </TouchableOpacity>
-                  </View>
-        </View>
-    )
-}
+const {width, height} = Dimensions.get('window');
 
-export default Login
+const LoginContainer = styled.ImageBackground`
+  flex: 1;
+  /* justify-content: center; */
+  align-items: center;  
+`;
 
-const style = StyleSheet.create({
-  container:{
-      flex: 1,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'green'
-  },
-  title:{
-    fontSize: 50,
-    fontFamily: 'Comic Sans MS'
-  },
-  img:{
-    height: 200
-  },
-  btn:{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '30%',
-    height: 80,
-    borderRadius: 12,
-    borderWidth: 5,
-  },
-  pressed:{
-    backgroundColor: 'red'
-  },
-  btnContainer:{
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 10
-  }
+const Texto = styled.Text`
+  color: #E3B779;
+  font-size: 40px;
+  padding: 90px 0px;
+  text-align: center;
+  font-family: 'ParkLaneNF';
+`
+
+export default function Login(){
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+      Font.loadAsync({
+        'ParkLaneNF': require('../assets/font/ParkLaneNF.ttf'),
+        'Milonga': require('../assets/font/Milonga.ttf')
+      }).then(() => setLoaded(true));
+    }, []);
+
+    if (!loaded) return null;
   
-})
+    return(
+        <LoginContainer source ={backgroundImage} resizeMode='cover'>
+          <Texto>Estacionamento Golden Flex</Texto>
+          <InputProps placeholder="Login"/>
+          <InputPropsSecure placeholder="Senha"/>
+          <Button texto="Entrar" /*onPress={alert("Funcionou")}*//>
+            
+        </LoginContainer>
+    )
+};
+
 
