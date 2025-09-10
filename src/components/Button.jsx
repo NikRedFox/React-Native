@@ -6,7 +6,7 @@ import buttonBackground from '../assets/buttonBg.png'
 const ButtonWrapper = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
-    margin-top: 60px;
+    /* margin-top: 60px; */
 
 `
 const Background = styled.ImageBackground`

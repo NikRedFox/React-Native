@@ -5,7 +5,6 @@ import inputBg from '../assets/inputBg.png';
 
 const InputWrapper = styled.View`
     width: 80%;
-    align-items: center;
 `
 
 const Input = styled.TextInput.attrs({
@@ -15,7 +14,7 @@ const Input = styled.TextInput.attrs({
     color: #E3B779;
     font-size: 35px;
     font-family: 'Milonga';
-    padding-left: 25px;
+    padding-left: 10px;
     margin-bottom: -10px;
 
 `

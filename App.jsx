@@ -15,7 +15,7 @@ const Container = styled.SafeAreaView`
 export default function App() { 
   return (
     <Container>
-      <StatusBar style='auto' />
+      <StatusBar style='auto' hidden/>
       <Login></Login>
 
 
