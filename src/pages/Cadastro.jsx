@@ -9,9 +9,8 @@ import * as Font from 'expo-font';
 
 const {width, height} = Dimensions.get('window');
 
-const LoginContainer = styled.ImageBackground`
+const CadastroContainer = styled.ImageBackground`
   flex: 1;
-  /* justify-content: center; */
   align-items: center;  
 `;
 
@@ -45,7 +44,7 @@ export default function Cadastro(){
     if (!loaded) return null;
   
     return(
-        <LoginContainer source ={backgroundImage} resizeMode='cover'>
+        <CadastroContainer source ={backgroundImage} resizeMode='cover'>
           <Texto>Cadastro</Texto>
           <InputContainer>
             <InputProps placeholder="Login"/>
@@ -59,7 +58,7 @@ export default function Cadastro(){
           </ButtonWrapper>
           
             
-        </LoginContainer>
+        </CadastroContainer>
     )
 };
 

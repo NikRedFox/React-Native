@@ -3,6 +3,7 @@ import { SafeAreaView, Text, View } from 'react-native';
 
 import Login from './src/pages/Login';
 import Cadastro from './src/pages/Cadastro';
+import HomeLista from './src/pages/HomeLista';
 
 import { useState } from 'react';
 import styled from 'styled-components/native';
@@ -18,7 +19,8 @@ export default function App() {
     <Container>
       <StatusBar style='auto' hidden/>
       {/* <Login></Login> */}
-      <Cadastro/>
+      {/* <Cadastro/> */}
+      <HomeLista/>
     </Container>
   )
 };
