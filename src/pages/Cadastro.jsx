@@ -6,7 +6,6 @@ import InputProps from '../components/Input.jsx';
 import InputPropsSecure from '../components/InputSecure.jsx';
 import Button from '../components/Button.jsx'
 import * as Font from 'expo-font';
-import Divisoria from '../components/Divisoria.jsx';
 
 const {width, height} = Dimensions.get('window');
 
@@ -18,17 +17,22 @@ const LoginContainer = styled.ImageBackground`
 
 const Texto = styled.Text`
   color: #E3B779;
-  font-size: 39px;
-  padding: 80px 0px;
+  font-size: 60px;
+  padding: 95px 0px 65px 0px;
   text-align: center;
   font-family: 'ParkLaneNF';
 `
 
 const InputContainer = styled.View`
-  margin-bottom: 55px;
+  margin-bottom: 40px;
+  gap: 28px;
 `
 
-export default function Login(){
+const ButtonWrapper = styled.View`
+    gap: 28px;
+`
+
+export default function Cadastro(){
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
@@ -42,15 +46,18 @@ export default function Login(){
   
     return(
         <LoginContainer source ={backgroundImage} resizeMode='cover'>
-          <Texto>Estacionamento Golden Flex</Texto>
+          <Texto>Cadastro</Texto>
           <InputContainer>
             <InputProps placeholder="Login"/>
             <InputPropsSecure placeholder="Senha"/>
+            <InputProps placeholder="Email"/>
           </InputContainer>
           
-          <Button texto="Entrar" /*onPress={alert("Funcionou")}*//>
-          <Divisoria/>
-          <Button texto="Cadastro"/>
+          <ButtonWrapper>
+            <Button texto="Concluir" /*onPress={alert("Funcionou")}*//>
+            <Button texto="Voltar" /*onPress={()=> navigation.navigate('Login')}*//>
+          </ButtonWrapper>
+          
             
         </LoginContainer>
     )
