@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import backgroundImage from '../assets/mobileBg.png'
 import split from '../assets/buttonSplit.png';
 import divisoria from '../assets/divisoriaLista.png';
-import Button from '../components/Button.jsx'
+import ModalEntrada from '../components/BasicModal.jsx';
 import * as Font from 'expo-font';
 
 const {width, height} = Dimensions.get('window');
@@ -78,6 +78,9 @@ const BglessButtonS = styled.Text`
 export default function HomeLista(){
     const [loaded, setLoaded] = useState(false)
     const [carros, setCarros] = useState([]);
+    const [modalEntradaVisible, setModalEntradaVisible] = useState(false);
+    const [modalSaidaVisible, setModalSaidaVisible] = useState(false);
+    const [placaSelecionada, setPlacaSelecionada] = useState('');
 
     useEffect(() => {
       Font.loadAsync({
@@ -101,6 +104,13 @@ export default function HomeLista(){
     }, [])
     
     if (!loaded) return null;
+
+    const handleEntrada = (placa) => {
+    setCarros([...carros, { id: Date.now().toString(), placa }]);
+    setModalEntradaVisible(false);
+  };
+
+  
 
     const renderItem = ({item}) =>(
       <Card>
@@ -128,7 +138,7 @@ export default function HomeLista(){
 
             <ButtonContainer>
               <TouchableOpacity>
-                <BglessButtonE>Entrada</BglessButtonE>
+                <BglessButtonE onPress={()=> setModalEntradaVisible(true)}>Entrada</BglessButtonE>
               </TouchableOpacity>
 
               <Split source={split}></Split>
