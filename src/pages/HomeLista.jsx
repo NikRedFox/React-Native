@@ -1,10 +1,11 @@
-import { Dimensions, Image, TouchableOpacity, View, Text, FlatList } from 'react-native';
+import { Dimensions, Image, TouchableOpacity, View, Text, FlatList, Modal } from 'react-native';
 import {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import backgroundImage from '../assets/mobileBg.png'
 import split from '../assets/buttonSplit.png';
 import divisoria from '../assets/divisoriaLista.png';
-import ModalEntrada from '../components/BasicModal.jsx';
+import ModalEntrada from '../components/EntradaModal.jsx';
+import ModalSaida from '../components/SaidaModal.jsx';
 import * as Font from 'expo-font';
 
 const {width, height} = Dimensions.get('window');
@@ -82,6 +83,9 @@ export default function HomeLista(){
     const [modalSaidaVisible, setModalSaidaVisible] = useState(false);
     const [placaSelecionada, setPlacaSelecionada] = useState('');
 
+    const abrirModalEntrada =()=> setModalEntradaVisible(true);
+    const abrirModalSaida =()=> setModalSaidaVisible(true);
+
     useEffect(() => {
       Font.loadAsync({
         'ParkLaneNF': require('../assets/font/ParkLaneNF.ttf'),
@@ -106,11 +110,18 @@ export default function HomeLista(){
     if (!loaded) return null;
 
     const handleEntrada = (placa) => {
-    setCarros([...carros, { id: Date.now().toString(), placa }]);
-    setModalEntradaVisible(false);
-  };
+      const agora = new Date();
+      const data = agora.toLocaleDateString("pt-BR");
+      const hora = agora.toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"});
+      
+      setCarros([...carros, { id: Date.now().toString(), placa, data, hora }]);
+      setModalEntradaVisible(false);
+    };
 
-  
+    const handleSaida = (placa) =>{
+      setCarros(carros.filter(carros.placa !== placa));
+      setModalSaidaVisible(false);
+    };
 
     const renderItem = ({item}) =>(
       <Card>
@@ -138,18 +149,30 @@ export default function HomeLista(){
 
             <ButtonContainer>
               <TouchableOpacity>
-                <BglessButtonE onPress={()=> setModalEntradaVisible(true)}>Entrada</BglessButtonE>
+                <BglessButtonE onPress={abrirModalEntrada}>Entrada</BglessButtonE>
               </TouchableOpacity>
 
               <Split source={split}></Split>
 
               <TouchableOpacity>
-                <BglessButtonS>Saida</BglessButtonS>
+                <BglessButtonS onPress={abrirModalSaida}>Saida</BglessButtonS>
               </TouchableOpacity>
             </ButtonContainer>
 
-                   
+            <ModalEntrada
+              visible={modalEntradaVisible} 
+              onConfirm={(placa) => handleEntrada(placa)}
+              onCancel={()=> setModalEntradaVisible(false)}
+            />
+
+            <ModalSaida
+              visible={modalSaidaVisible} 
+              onConfirm={(placa) => handleSaida(placa)}
+              onCancel={()=> setModalSaidaVisible(false)}
+            />
           </ListaContainer>
+
+          
 
     )
 };

@@ -27,10 +27,8 @@ const ModalInput = styled.TextInput`
   padding: 10px;
 `;
 
-export default function ModalEntrada({visible, onConfirm, onCancel}){
+export default function ModalSaida({visible, onConfirm, onCancel}){
     const [placa, setPlaca] = useState('');    
-    const [modalEntradaVisible, setModalEntradaVisible] = useState(false);
-    const [modalSaidaVisible, setModalSaidaVisible] = useState(false);
 
     const handleConfirm = () =>{
         onConfirm(placa);
@@ -38,16 +36,18 @@ export default function ModalEntrada({visible, onConfirm, onCancel}){
     }
 
     return(
-        <Modal transparent={true} visible={visible} animationType ='slide' >
+        <Modal transparent={true} visible={visible} animationType ='slide'>
             <ModalContainer>
                 <ModalContent>
-                    <Text>Registrar Entrada</Text>
-                    <ModalInput placeholder="Placa" value="{placa}" onChangeText={setPlaca} />
-                    <TouchableOpacity onPress={onConfirm}><Text>Confirmar</Text></TouchableOpacity>
+                    <Text>Registrar Saida</Text>
+                    <ModalInput placeholder="Placa" value={placa} onChangeText={setPlaca} />
+                    <TouchableOpacity onPress={handleConfirm}><Text>Confirmar</Text></TouchableOpacity>
                     <TouchableOpacity onPress={onCancel}><Text>Cancelar</Text></TouchableOpacity>
-                </ModalContent>
+                </ModalContent>               
             </ModalContainer>
         </Modal>
+
+        
     )
 }
 

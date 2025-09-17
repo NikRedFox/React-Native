@@ -4,7 +4,7 @@ import { TextInput, Image } from "react-native";
 import inputBg from '../assets/inputBg.png';
 
 const InputWrapper = styled.View`
-    width: 80%;
+    /* width: 80%; */
 `
 
 const Input = styled.TextInput.attrs({
