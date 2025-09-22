@@ -115,7 +115,7 @@ export default function HomeLista(){
       const hora = agora.toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"});
       
       setCarros([...carros, { id: Date.now().toString(), placa, data, hora }]);
-      setModalEntradaVisible(false);
+      // setModalEntradaVisible(false);
     };
 
     const handleSaida = (placa) =>{
@@ -163,6 +163,7 @@ export default function HomeLista(){
               visible={modalEntradaVisible} 
               onConfirm={(placa) => handleEntrada(placa)}
               onCancel={()=> setModalEntradaVisible(false)}
+              carros={carros}
             />
 
             <ModalSaida

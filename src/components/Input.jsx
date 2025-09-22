@@ -22,10 +22,10 @@ const Input = styled.TextInput.attrs({
 const LineImage = styled.Image`
 `
 
-export default function InputProps({ placeholder}){
+export default function InputProps({ placeholder, value, onChangeText}){
     return(
         <InputWrapper>
-            <Input placeholder={placeholder}/>
+            <Input placeholder={placeholder} value={value} onChangeText={onChangeText}/>
             <LineImage source={inputBg}/>
         </InputWrapper>
     )

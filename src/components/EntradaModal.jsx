@@ -1,69 +1,135 @@
-import { Modal, Text, TextInput, TouchableOpacity, View, ImageBackground, TouchableWithoutFeedback } from "react-native";
-import { useState } from "react";
+import { Modal, Text, TextInput, TouchableOpacity, View, ImageBackground, Image, FlatList, TouchableWithoutFeedback } from "react-native";
+import { useState, useEffect } from "react";
+import * as Font from 'expo-font';
 import styled from "styled-components/native";
 import upperDetail from '../assets/upperDetail.png';
+import divisoria from '../assets/divisoriaLista.png';
 import InputProps from "./Input";
+import Button from "./Button";
 
 const ModalContainer = styled.View`
   flex: 1;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  background-color: rgba(183, 176, 159, 0.75);
-  /* margin-bottom: 180px; */
-  /* height: 80%;
-  align-self: stretch;
-  width: 100%; */
+  background-color: rgba(0, 0, 0, 0.75);
   
 `;
 
 const ModalContent = styled.View`
   width: 80%;
-  height: 90%;
+  height: 600px;
   bottom: 0;
-  /* padding: 20px; */
   background-color: #1c1c1c;
   border-radius: 12px;
   align-items: center;
+  position: relative;
 `;
 
 
 const TextModal = styled.Text`
   color: #E3B779;
   font-size: 35px;
+  font-family: 'Milonga';
 
 `
 
-const ModalBg = styled.ImageBackground`
+const ModalBg = styled.Image`
   align-items: center;
   width: 100%;
-  background-image: cover;  
+  height: 108px;
+  position: absolute;
 `
 
-export default function ModalEntrada({visible, onConfirm, onCancel}){
-    const [placa, setPlaca] = useState('');    
+const InputWrapper = styled.View`
+  align-items: center;
+  margin-top: 30px;
+  gap: 20px;
+`
 
-    const handleConfirm = () =>{
-        onConfirm(placa);
-        setPlaca('');
+const SuccessBox = styled.View`
+  margin-top: 12px;
+  padding: 10px 14px;
+  background-color: rgba(227,183,121,0.12);
+  border: 1px solid #E3B779;
+  border-radius: 10px;
+  align-items: flex-start;
+  gap: 10px;
+`;
+
+const SuccessText = styled.Text`
+  color: #E3B779;
+  font-family: 'Milonga';
+  font-size: 18px;
+  text-align: center;
+`;
+
+const Divisoria = styled.Image`
+  width: 200px;
+  height: 20px;
+  align-self: center;
+`
+
+export default function ModalEntrada({ visible, onConfirm, onCancel }) {
+  const [placa, setPlaca] = useState('');
+  const [showSuccess, setSuccess] = useState(false);
+  const [ultimaEntrada, setUltimaEntrada] = useState(null);
+
+  useEffect(() => {
+    if (!visible) {
+      setPlaca("");
+      setSuccess(false);
+      setUltimaEntrada(null);
     }
+  }, [visible]);
 
-    return(      
-      <Modal transparent={true} visible={visible} animationType ='slide' statusBarTranslucent={true}>          
-        <TouchableWithoutFeedback onPress={onCancel}>
-          <ModalContainer>
-              <TouchableWithoutFeedback onPress={()=>{}}>
-                <ModalContent>
-                  <ModalBg source={upperDetail} resizeMode="cover">
-                    <TextModal>Registrar Entrada</TextModal>
-                    <InputProps placeholder="Placa" value={placa} onChangeText={setPlaca} />
-                    <TouchableOpacity onPress={handleConfirm}><TextModal>Confirmar</TextModal></TouchableOpacity>
-                    <TouchableOpacity onPress={onCancel}><TextModal>Cancelar</TextModal></TouchableOpacity>
-                  </ModalBg>                                    
-                </ModalContent> 
-              </TouchableWithoutFeedback>
-          </ModalContainer>
-        </TouchableWithoutFeedback>                             
-      </Modal>        
-    )
+  useEffect(() => {
+    Font.loadAsync({
+      'ParkLaneNF': require('../assets/font/ParkLaneNF.ttf'),
+      'Milonga': require('../assets/font/Milonga.ttf')
+    }).then(() => setLoaded(true));
+  }, []);
+
+  const handleConfirm = () => {
+    const p = placa.trim();
+    if (!p) return;
+
+    const agora = new Date();
+    const data = agora.toLocaleDateString();
+    const hora = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    setUltimaEntrada({ placa: p, data, hora });
+    onConfirm(p);
+    setPlaca('');
+    setSuccess(true);
+  } 
+
+  return (
+    <Modal transparent={true} visible={visible} animationType='slide' statusBarTranslucent={true}>
+      <TouchableWithoutFeedback onPress={onCancel}>
+        <ModalContainer>
+          <ModalContent>
+            <ModalBg source={upperDetail} resizeMode="cover" />
+
+            <InputWrapper>
+              <TextModal>Entrada</TextModal>
+              <InputProps placeholder="Placa" value={placa} onChangeText={setPlaca} />
+              <Button texto="Cadastro" onPress={handleConfirm}></Button>              
+              {ultimaEntrada && (
+                <SuccessBox>
+                  <TextModal>Cadastrado com sucesso</TextModal>
+                  <Divisoria source={divisoria} />
+                  <SuccessText>Placa: {ultimaEntrada.placa}</SuccessText>
+                  <SuccessText>Entrada: {ultimaEntrada.data}</SuccessText>
+                  <SuccessText>Hora: {ultimaEntrada.hora}</SuccessText>
+                  <Divisoria source={divisoria} />
+                </SuccessBox>
+              ) }
+            </InputWrapper>
+
+          </ModalContent>
+        </ModalContainer>
+      </TouchableWithoutFeedback>
+    </Modal>
+  )
 }
 
