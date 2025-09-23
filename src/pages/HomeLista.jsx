@@ -170,6 +170,7 @@ export default function HomeLista(){
               visible={modalSaidaVisible} 
               onConfirm={(placa) => handleSaida(placa)}
               onCancel={()=> setModalSaidaVisible(false)}
+              carros = {carros}
             />
           </ListaContainer>
 

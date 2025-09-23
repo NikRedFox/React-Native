@@ -49,8 +49,8 @@ const InputWrapper = styled.View`
 const SuccessBox = styled.View`
   margin-top: 12px;
   padding: 10px 14px;
-  background-color: rgba(227,183,121,0.12);
-  border: 1px solid #E3B779;
+  /* background-color: rgba(227,183,121,0.12); */
+  /* border: 1px solid #E3B779; */
   border-radius: 10px;
   align-items: flex-start;
   gap: 10px;
@@ -61,13 +61,15 @@ const SuccessText = styled.Text`
   font-family: 'Milonga';
   font-size: 18px;
   text-align: center;
+  padding: 5px;
 `;
 
 const Divisoria = styled.Image`
   width: 200px;
   height: 20px;
   align-self: center;
-`
+  
+`;
 
 export default function ModalEntrada({ visible, onConfirm, onCancel }) {
   const [placa, setPlaca] = useState('');
@@ -78,7 +80,7 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
     if (!visible) {
       setPlaca("");
       setSuccess(false);
-      setUltimaEntrada(null);
+      // setUltimaEntrada(null);
     }
   }, [visible]);
 
@@ -116,7 +118,7 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
               <Button texto="Cadastro" onPress={handleConfirm}></Button>              
               {ultimaEntrada && (
                 <SuccessBox>
-                  <TextModal>Cadastrado com sucesso</TextModal>
+                  <SuccessText>Cadastrado com sucesso</SuccessText>
                   <Divisoria source={divisoria} />
                   <SuccessText>Placa: {ultimaEntrada.placa}</SuccessText>
                   <SuccessText>Entrada: {ultimaEntrada.data}</SuccessText>
