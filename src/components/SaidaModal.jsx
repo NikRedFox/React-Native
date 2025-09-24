@@ -1,10 +1,12 @@
 import { Modal, Text, TextInput, TouchableOpacity, View, ImageBackground, Image, FlatList, TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
 import * as Font from 'expo-font';
+import RNPickerSelect from 'react-native-picker-select';
 import styled from "styled-components/native";
 import upperDetail from '../assets/upperDetail.png';
 import divisoria from '../assets/divisoriaLista.png';
 import InputProps from "./Input";
+import PickerPlaca from "./DropdownRNP";
 import Button from "./Button";
 
 const ModalContainer = styled.View`
@@ -87,7 +89,13 @@ export default function ModalSaida({ visible, onConfirm, onCancel, carros = [] }
     if (!visible) {
       setPlaca("");
       setSuccess(false);
-      // setUltimaSaida(null);
+      setUltimaSaida({
+        placa: '',
+        dataEntrada: '',
+        horaEntrada: '',
+        dataSaida: '',
+        horaSaida: '',
+        preco: 0});
     }
   }, [visible]);
 
@@ -109,24 +117,27 @@ export default function ModalSaida({ visible, onConfirm, onCancel, carros = [] }
     const dataSaida = agora.toLocaleDateString();
     const horaSaida = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    const entrada = new Date(`${carro.data} ${carro.hora}`);
+    const [dia, mes, ano] = carro.data.split('/');
+    const [hora, minuto] = carro.hora.split(':');
+
+    const entrada = new Date(ano, mes - 1, dia, hora, minuto);
 
     const diffHoras = Math.ceil((agora - entrada) / 1000 / 60 / 60);
     const preco = diffHoras * 10;
 
     setUltimaSaida({
-        placa: p,
-        dataEntrada: carro.data,
-        horaEntrada: carro.hora,
-        dataSaida,
-        horaSaida,
-        preco
+      placa: p,
+      dataEntrada: carro.data,
+      horaEntrada: carro.hora,
+      dataSaida,
+      horaSaida,
+      preco
     });
 
-    
-    // onConfirm(p);
+
     setPlaca('');
     setSuccess(true);
+    onConfirm(p);
   }
 
 
@@ -134,29 +145,36 @@ export default function ModalSaida({ visible, onConfirm, onCancel, carros = [] }
     <Modal transparent={true} visible={visible} animationType='slide' statusBarTranslucent={true}>
       <TouchableWithoutFeedback onPress={onCancel}>
         <ModalContainer>
-          <ModalContent>
-            <ModalBg source={upperDetail} resizeMode="cover" />
+          <TouchableWithoutFeedback>
+            <ModalContent>
+              <ModalBg source={upperDetail} resizeMode="cover" />
 
-            <InputWrapper>
-              <TextModal>Saida</TextModal>
-              <InputProps placeholder="Placa" value={placa} onChangeText={setPlaca} />
-              <Button texto="Checkout" onPress={handleConfirm}></Button>              
-              {ultimaSaida.placa !== '' && (
-                <SuccessBox>
-                  <SuccessText>Checkout concluido</SuccessText>
-                  <Divisoria source={divisoria} />
-                  <SuccessText>Placa: {ultimaSaida.placa}</SuccessText>
-                  <SuccessText>Entrada: {ultimaSaida.dataEntrada}</SuccessText>
-                  <SuccessText>Hora: {ultimaSaida.horaEntrada}</SuccessText>
-                  <SuccessText>Saida: {ultimaSaida.dataSaida}</SuccessText>
-                  <SuccessText>Hora: {ultimaSaida.horaSaida}</SuccessText>
-                  <SuccessText>Preço: {ultimaSaida.preco}</SuccessText>
-                  <Divisoria source={divisoria} />
-                </SuccessBox>
-              ) }
-            </InputWrapper>
+              <InputWrapper>
+                <TextModal>Saida</TextModal>
+                <PickerPlaca
+                  value={placa}
+                  onValueChange={(value) => setPlaca(value)}
+                  carros={carros}
+                />
+                <Button texto="Checkout" onPress={handleConfirm} />
+                {ultimaSaida.placa !== '' && (
+                  <SuccessBox>
+                    <SuccessText>Checkout concluido</SuccessText>
+                    <Divisoria source={divisoria} />
+                    <SuccessText>Placa: {ultimaSaida.placa}</SuccessText>
+                    <SuccessText>Entrada: {ultimaSaida.dataEntrada}</SuccessText>
+                    <SuccessText>Hora: {ultimaSaida.horaEntrada}</SuccessText>
+                    <SuccessText>Saida: {ultimaSaida.dataSaida}</SuccessText>
+                    <SuccessText>Hora: {ultimaSaida.horaSaida}</SuccessText>
+                    <SuccessText>Preço: R$ {ultimaSaida.preco},00</SuccessText>
+                    <Divisoria source={divisoria} />
+                  </SuccessBox>
+                )}
+              </InputWrapper>
 
-          </ModalContent>
+            </ModalContent>
+          </TouchableWithoutFeedback>
+
         </ModalContainer>
       </TouchableWithoutFeedback>
     </Modal>

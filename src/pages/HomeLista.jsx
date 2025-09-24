@@ -1,5 +1,5 @@
 import { Dimensions, Image, TouchableOpacity, View, Text, FlatList, Modal } from 'react-native';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import backgroundImage from '../assets/mobileBg.png'
 import split from '../assets/buttonSplit.png';
@@ -8,7 +8,7 @@ import ModalEntrada from '../components/EntradaModal.jsx';
 import ModalSaida from '../components/SaidaModal.jsx';
 import * as Font from 'expo-font';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const ListaContainer = styled.ImageBackground`
   flex: 1;
@@ -76,107 +76,107 @@ const BglessButtonS = styled.Text`
   text-align: center;
 `
 
-export default function HomeLista(){
-    const [loaded, setLoaded] = useState(false)
-    const [carros, setCarros] = useState([]);
-    const [modalEntradaVisible, setModalEntradaVisible] = useState(false);
-    const [modalSaidaVisible, setModalSaidaVisible] = useState(false);
-    const [placaSelecionada, setPlacaSelecionada] = useState('');
+export default function HomeLista() {
+  const [loaded, setLoaded] = useState(false)
+  const [carros, setCarros] = useState([]);
+  const [modalEntradaVisible, setModalEntradaVisible] = useState(false);
+  const [modalSaidaVisible, setModalSaidaVisible] = useState(false);
+  const [placaSelecionada, setPlacaSelecionada] = useState('');
 
-    const abrirModalEntrada =()=> setModalEntradaVisible(true);
-    const abrirModalSaida =()=> setModalSaidaVisible(true);
+  const abrirModalEntrada = () => setModalEntradaVisible(true);
+  const abrirModalSaida = () => setModalSaidaVisible(true);
 
-    useEffect(() => {
-      Font.loadAsync({
-        'ParkLaneNF': require('../assets/font/ParkLaneNF.ttf'),
-        'Milonga': require('../assets/font/Milonga.ttf')
-      }).then(() => setLoaded(true));
-    }, []);
+  useEffect(() => {
+    Font.loadAsync({
+      'ParkLaneNF': require('../assets/font/ParkLaneNF.ttf'),
+      'Milonga': require('../assets/font/Milonga.ttf')
+    }).then(() => setLoaded(true));
+  }, []);
 
 
-    useEffect(()=>{
-      const dadosFake = [
-        {id: '1', placa: 'ABC-1234', data: '15/09/2025', hora: '14:30'},
-        {id: '2', placa: 'DEF-5678', data: '15/09/2025', hora: '14:30'},
-        {id: '3', placa: 'GHI-9101', data: '15/09/2025', hora: '14:30'},
-        {id: '4', placa: 'JKL-1121', data: '15/09/2025', hora: '14:30'},
-        {id: '5', placa: 'MNO-3141', data: '15/09/2025', hora: '14:30'},
-        {id: '6', placa: 'PQR-5161', data: '15/09/2025', hora: '14:30'},
-      ];
+  useEffect(() => {
+    const dadosFake = [
+      { id: '1', placa: 'ABC1234', data: '15/09/2025', hora: '14:30' },
+      { id: '2', placa: 'DEF5678', data: '15/09/2025', hora: '14:30' },
+      { id: '3', placa: 'GHI9101', data: '15/09/2025', hora: '14:30' },
+      { id: '4', placa: 'JKL1121', data: '15/09/2025', hora: '14:30' },
+      { id: '5', placa: 'MNO3141', data: '15/09/2025', hora: '14:30' },
+      { id: '6', placa: 'PQR5161', data: '15/09/2025', hora: '14:30' },
+    ];
 
-      setCarros(dadosFake);
-    }, [])
-    
-    if (!loaded) return null;
+    setCarros(dadosFake);
+  }, [])
 
-    const handleEntrada = (placa) => {
-      const agora = new Date();
-      const data = agora.toLocaleDateString("pt-BR");
-      const hora = agora.toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"});
-      
-      setCarros([...carros, { id: Date.now().toString(), placa, data, hora }]);
-      // setModalEntradaVisible(false);
-    };
+  if (!loaded) return null;
 
-    const handleSaida = (placa) =>{
-      setCarros(carros.filter(carros.placa !== placa));
-      setModalSaidaVisible(false);
-    };
+  const handleEntrada = (placa) => {
+    const agora = new Date();
+    const data = agora.toLocaleDateString("pt-BR");
+    const hora = agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
-    const renderItem = ({item}) =>(
-      <Card>
-        <Placa>Placa:    {item.placa}</Placa>
-        <Info>Entrada:    {item.data}</Info>
-        <Info>Hora:         {item.hora}</Info>
-      </Card>
-    )
-  
-    return(
-         <ListaContainer source ={backgroundImage} resizeMode='cover'>
-            <Texto>Lista</Texto>             
-            <View style={{flex:1}}>
-              <FlatList
-                data={carros}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-                ItemSeparatorComponent={()=> (
-                  <Divisoria
-                    source={divisoria}
-                  />
-                )}
-              /> 
-            </View>
+    setCarros([...carros, { id: Date.now().toString(), placa, data, hora }]);
+    // setModalEntradaVisible(false);
+  };
 
-            <ButtonContainer>
-              <TouchableOpacity>
-                <BglessButtonE onPress={abrirModalEntrada}>Entrada</BglessButtonE>
-              </TouchableOpacity>
+  const handleSaida = (placa) => {
+    setCarros(carros.filter(item => item.placa !== placa));
+    // setModalSaidaVisible(false);'
+  };
 
-              <Split source={split}></Split>
+  const renderItem = ({ item }) => (
+    <Card>
+      <Placa>Placa:    {item.placa}</Placa>
+      <Info>Entrada:    {item.data}</Info>
+      <Info>Hora:         {item.hora}</Info>
+    </Card>
+  )
 
-              <TouchableOpacity>
-                <BglessButtonS onPress={abrirModalSaida}>Saida</BglessButtonS>
-              </TouchableOpacity>
-            </ButtonContainer>
-
-            <ModalEntrada
-              visible={modalEntradaVisible} 
-              onConfirm={(placa) => handleEntrada(placa)}
-              onCancel={()=> setModalEntradaVisible(false)}
-              carros={carros}
+  return (
+    <ListaContainer source={backgroundImage} resizeMode='cover'>
+      <Texto>Lista</Texto>
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={carros}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          ItemSeparatorComponent={() => (
+            <Divisoria
+              source={divisoria}
             />
+          )}
+        />
+      </View>
 
-            <ModalSaida
-              visible={modalSaidaVisible} 
-              onConfirm={(placa) => handleSaida(placa)}
-              onCancel={()=> setModalSaidaVisible(false)}
-              carros = {carros}
-            />
-          </ListaContainer>
+      <ButtonContainer>
+        <TouchableOpacity>
+          <BglessButtonE onPress={abrirModalEntrada}>Entrada</BglessButtonE>
+        </TouchableOpacity>
 
-          
+        <Split source={split}></Split>
 
-    )
+        <TouchableOpacity>
+          <BglessButtonS onPress={abrirModalSaida}>Saida</BglessButtonS>
+        </TouchableOpacity>
+      </ButtonContainer>
+
+      <ModalEntrada
+        visible={modalEntradaVisible}
+        onConfirm={(placa) => handleEntrada(placa)}
+        onCancel={() => setModalEntradaVisible(false)}
+        carros={carros}
+      />
+
+      <ModalSaida
+        visible={modalSaidaVisible}
+        onConfirm={(placa) => handleSaida(placa)}
+        onCancel={() => setModalSaidaVisible(false)}
+        carros={carros}
+      />
+    </ListaContainer>
+
+
+
+  )
 };
 
 

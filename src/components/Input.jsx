@@ -22,11 +22,19 @@ const Input = styled.TextInput.attrs({
 const LineImage = styled.Image`
 `
 
-export default function InputProps({ placeholder, value, onChangeText}){
-    return(
+export default function InputProps({ placeholder, value, onChangeText, normalizar }) {
+    const handleChange = (textoDigitado) => {
+        let resultado = textoDigitado;
+        if(normalizar){
+            resultado = textoDigitado.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+        }
+        onChangeText(resultado);
+    };
+
+    return (
         <InputWrapper>
-            <Input placeholder={placeholder} value={value} onChangeText={onChangeText}/>
-            <LineImage source={inputBg}/>
+            <Input placeholder={placeholder} value={value} onChangeText={handleChange} />
+            <LineImage source={inputBg} />
         </InputWrapper>
     )
-}
+};

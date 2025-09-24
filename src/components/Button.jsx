@@ -22,8 +22,8 @@ const ButtonText = styled.Text`
     font-family: 'Milonga';
 `
 
-export  default function Button({ texto, onPress}){
-    return(
+export default function Button({ texto, onPress }) {
+    return (
         <ButtonWrapper onPress={onPress}>
             <Background source={buttonBackground} resizeMode='cover'>
                 <ButtonText >{texto}</ButtonText>

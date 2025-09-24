@@ -103,32 +103,32 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
     onConfirm(p);
     setPlaca('');
     setSuccess(true);
-  } 
+  }
 
   return (
     <Modal transparent={true} visible={visible} animationType='slide' statusBarTranslucent={true}>
       <TouchableWithoutFeedback onPress={onCancel}>
         <ModalContainer>
-          <ModalContent>
-            <ModalBg source={upperDetail} resizeMode="cover" />
-
-            <InputWrapper>
-              <TextModal>Entrada</TextModal>
-              <InputProps placeholder="Placa" value={placa} onChangeText={setPlaca} />
-              <Button texto="Cadastro" onPress={handleConfirm}></Button>              
-              {ultimaEntrada && (
-                <SuccessBox>
-                  <SuccessText>Cadastrado com sucesso</SuccessText>
-                  <Divisoria source={divisoria} />
-                  <SuccessText>Placa: {ultimaEntrada.placa}</SuccessText>
-                  <SuccessText>Entrada: {ultimaEntrada.data}</SuccessText>
-                  <SuccessText>Hora: {ultimaEntrada.hora}</SuccessText>
-                  <Divisoria source={divisoria} />
-                </SuccessBox>
-              ) }
-            </InputWrapper>
-
-          </ModalContent>
+          <TouchableWithoutFeedback>
+            <ModalContent>
+              <ModalBg source={upperDetail} resizeMode="cover" />
+              <InputWrapper>
+                <TextModal>Entrada</TextModal>
+                <InputProps placeholder="Placa" value={placa} onChangeText={setPlaca} normalizar />
+                <Button texto="Cadastro" onPress={handleConfirm}></Button>
+                {ultimaEntrada && (
+                  <SuccessBox>
+                    <SuccessText>Cadastrado com sucesso</SuccessText>
+                    <Divisoria source={divisoria} />
+                    <SuccessText>Placa: {ultimaEntrada.placa}</SuccessText>
+                    <SuccessText>Entrada: {ultimaEntrada.data}</SuccessText>
+                    <SuccessText>Hora: {ultimaEntrada.hora}</SuccessText>
+                    <Divisoria source={divisoria} />
+                  </SuccessBox>
+                )}
+              </InputWrapper>
+            </ModalContent>
+          </TouchableWithoutFeedback>
         </ModalContainer>
       </TouchableWithoutFeedback>
     </Modal>

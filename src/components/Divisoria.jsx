@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import {Text, Image } from 'react-native';
+import { Text, Image } from 'react-native';
 import divisoria from '../assets/sideDetail.png';
 import divisoriaInversa from '../assets/sideDetailInverso.png';
 
@@ -28,12 +28,12 @@ const EsqImg = styled.Image`
 const DirImg = styled.Image`
 `
 
-export default function Divisoria(){
-    return(
+export default function Divisoria() {
+    return (
         <DivisoriaWrapper>
-            <EsqImg source={divisoria}/> 
+            <EsqImg source={divisoria} />
             <LineText>Ou</LineText>
-            <DirImg source={divisoriaInversa}/>  
-        </DivisoriaWrapper>             
+            <DirImg source={divisoriaInversa} />
+        </DivisoriaWrapper>
     )
 }

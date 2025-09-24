@@ -1,5 +1,5 @@
 import { Dimensions } from 'react-native';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import backgroundImage from '../assets/mobileBg.png'
 import InputProps from '../components/Input.jsx';
@@ -7,7 +7,7 @@ import InputPropsSecure from '../components/InputSecure.jsx';
 import Button from '../components/Button.jsx'
 import * as Font from 'expo-font';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const CadastroContainer = styled.ImageBackground`
   flex: 1;
@@ -31,35 +31,35 @@ const ButtonWrapper = styled.View`
     gap: 28px;
 `
 
-export default function Cadastro(){
-    const [loaded, setLoaded] = useState(false);
+export default function Cadastro() {
+  const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
-      Font.loadAsync({
-        'ParkLaneNF': require('../assets/font/ParkLaneNF.ttf'),
-        'Milonga': require('../assets/font/Milonga.ttf')
-      }).then(() => setLoaded(true));
-    }, []);
+  useEffect(() => {
+    Font.loadAsync({
+      'ParkLaneNF': require('../assets/font/ParkLaneNF.ttf'),
+      'Milonga': require('../assets/font/Milonga.ttf')
+    }).then(() => setLoaded(true));
+  }, []);
 
-    if (!loaded) return null;
-  
-    return(
-        <CadastroContainer source ={backgroundImage} resizeMode='cover'>
-          <Texto>Cadastro</Texto>
-          <InputContainer>
-            <InputProps placeholder="Login"/>
-            <InputPropsSecure placeholder="Senha"/>
-            <InputProps placeholder="Email"/>
-          </InputContainer>
-          
-          <ButtonWrapper>
-            <Button texto="Concluir" /*onPress={alert("Funcionou")}*//>
-            <Button texto="Voltar" /*onPress={()=> navigation.navigate('Login')}*//>
-          </ButtonWrapper>
-          
-            
-        </CadastroContainer>
-    )
+  if (!loaded) return null;
+
+  return (
+    <CadastroContainer source={backgroundImage} resizeMode='cover'>
+      <Texto>Cadastro</Texto>
+      <InputContainer>
+        <InputProps placeholder="Login" />
+        <InputPropsSecure placeholder="Senha" />
+        <InputProps placeholder="Email" />
+      </InputContainer>
+
+      <ButtonWrapper>
+        <Button texto="Concluir"/>
+        <Button texto="Voltar" /*onPress={()=> navigation.navigate('Login')}*/ />
+      </ButtonWrapper>
+
+
+    </CadastroContainer>
+  )
 };
 
 

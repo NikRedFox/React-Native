@@ -14,13 +14,13 @@ const Container = styled.SafeAreaView`
   background-color: #151517;
 `
 
-export default function App() { 
+export default function App() {
   return (
     <Container>
       <StatusBar style='auto' translucent />
       {/* <Login></Login> */}
       {/* <Cadastro/> */}
-      <HomeLista/>
+      <HomeLista />
     </Container>
   )
 };
