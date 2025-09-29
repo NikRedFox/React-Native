@@ -2,6 +2,8 @@ import { Modal, Text, TextInput, TouchableOpacity, View, ImageBackground, Image,
 import { useState, useEffect } from "react";
 import * as Font from 'expo-font';
 import styled from "styled-components/native";
+import axios from "axios";
+
 import upperDetail from '../assets/upperDetail.png';
 import divisoria from '../assets/divisoriaLista.png';
 import InputProps from "./Input";
@@ -49,8 +51,6 @@ const InputWrapper = styled.View`
 const SuccessBox = styled.View`
   margin-top: 12px;
   padding: 10px 14px;
-  /* background-color: rgba(227,183,121,0.12); */
-  /* border: 1px solid #E3B779; */
   border-radius: 10px;
   align-items: flex-start;
   gap: 10px;
@@ -75,12 +75,13 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
   const [placa, setPlaca] = useState('');
   const [showSuccess, setSuccess] = useState(false);
   const [ultimaEntrada, setUltimaEntrada] = useState(null);
+  const [carregando, setCarregando] = useState(false);  
 
   useEffect(() => {
     if (!visible) {
       setPlaca("");
       setSuccess(false);
-      // setUltimaEntrada(null);
+      setUltimaEntrada(null);
     }
   }, [visible]);
 
@@ -91,18 +92,32 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
     }).then(() => setLoaded(true));
   }, []);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const p = placa.trim();
     if (!p) return;
+    
+    try{
+      setCarregando(true);
+      const response = await axios.post("http://10.0.2.2:8080/api/veiculos/entrada", {placa: p});
+      setUltimaEntrada(response.data.veiculo);
+      onConfirm?.();
+    }
+    catch (error){
+      console.error("Erro ao registrar entrada: ", error);
+    }
+    finally{
+      setCarregando(false);
+      setPlaca('');
+    }
 
-    const agora = new Date();
-    const data = agora.toLocaleDateString();
-    const hora = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // const agora = new Date();
+    // const data = agora.toLocaleDateString();
+    // const hora = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    setUltimaEntrada({ placa: p, data, hora });
-    onConfirm(p);
-    setPlaca('');
-    setSuccess(true);
+    // setUltimaEntrada({ placa: p, data, hora });
+    // onConfirm(p);
+    // setPlaca('');
+    // setSuccess(true);
   }
 
   return (
@@ -115,14 +130,14 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
               <InputWrapper>
                 <TextModal>Entrada</TextModal>
                 <InputProps placeholder="Placa" value={placa} onChangeText={setPlaca} normalizar />
-                <Button texto="Cadastro" onPress={handleConfirm}></Button>
+                <Button texto={carregando ? "Espere..." : "Cadastro"} onPress={handleConfirm} disabled={carregando}></Button>
                 {ultimaEntrada && (
                   <SuccessBox>
                     <SuccessText>Cadastrado com sucesso</SuccessText>
                     <Divisoria source={divisoria} />
                     <SuccessText>Placa: {ultimaEntrada.placa}</SuccessText>
-                    <SuccessText>Entrada: {ultimaEntrada.data}</SuccessText>
-                    <SuccessText>Hora: {ultimaEntrada.hora}</SuccessText>
+                    <SuccessText>Entrada: {ultimaEntrada.dataEntrada}</SuccessText>
+                    <SuccessText>Hora: {ultimaEntrada.horaEntrada}</SuccessText>
                     <Divisoria source={divisoria} />
                   </SuccessBox>
                 )}

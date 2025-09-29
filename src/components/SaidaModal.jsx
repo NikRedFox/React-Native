@@ -1,8 +1,9 @@
 import { Modal, Text, TextInput, TouchableOpacity, View, ImageBackground, Image, FlatList, TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import * as Font from 'expo-font';
-import RNPickerSelect from 'react-native-picker-select';
 import styled from "styled-components/native";
+
 import upperDetail from '../assets/upperDetail.png';
 import divisoria from '../assets/divisoriaLista.png';
 import InputProps from "./Input";
@@ -32,7 +33,6 @@ const TextModal = styled.Text`
   color: #E3B779;
   font-size: 35px;
   font-family: 'Milonga';
-
 `
 
 const ModalBg = styled.Image`
@@ -51,8 +51,6 @@ const InputWrapper = styled.View`
 const SuccessBox = styled.View`
   margin-top: 12px;
   padding: 10px 14px;
-  /* background-color: rgba(227,183,121,0.12); */
-  /* border: 1px solid #E3B779; */
   border-radius: 10px;
   align-items: flex-start;
   gap: 10px;
@@ -73,29 +71,35 @@ const Divisoria = styled.Image`
   
 `;
 
-export default function ModalSaida({ visible, onConfirm, onCancel, carros = [] }) {
+export default function ModalSaida({ visible, onConfirm, onCancel}) {
+  const [carros, setCarros] = useState([]);
   const [placa, setPlaca] = useState('');
   const [showSuccess, setSuccess] = useState(false);
-  const [ultimaSaida, setUltimaSaida] = useState({
-    placa: '',
-    dataEntrada: '',
-    horaEntrada: '',
-    dataSaida: '',
-    horaSaida: '',
-    preco: 0
-  });
+  const [ultimaSaida, setUltimaSaida] = useState(null
+    // {
+    // placa: '',
+    // dataEntrada: '',
+    // horaEntrada: '',
+    // dataSaida: '',
+    // horaSaida: '',
+    // preco: 0
+    
+  // }
+  );
 
   useEffect(() => {
     if (!visible) {
       setPlaca("");
       setSuccess(false);
-      setUltimaSaida({
-        placa: '',
-        dataEntrada: '',
-        horaEntrada: '',
-        dataSaida: '',
-        horaSaida: '',
-        preco: 0});
+      setUltimaSaida(null
+        // {
+        // placa: '',
+        // dataEntrada: '',
+        // horaEntrada: '',
+        // dataSaida: '',
+        // horaSaida: '',
+        // preco: 0}
+      );
     }
   }, [visible]);
 
@@ -106,39 +110,60 @@ export default function ModalSaida({ visible, onConfirm, onCancel, carros = [] }
     });
   }, []);
 
-  const handleConfirm = () => {
-    const p = placa.trim();
-    if (!p) return;
+  useEffect(() => {
+    if(visible){
+      axios.get("http://10.105.80.130:8080/carros")
+      .then(res => setCarros(res.data))
+      .catch(err => console.error("Erro ao carregar carros: ", err));
+    }
+  }, [visible]);
 
-    const carro = carros.find(c => c.placa === p);
-    if (!carro) return;
+  const handleConfirm = async () => {
+    // const p = placa.trim();
+    if (!placa) return;
 
-    const agora = new Date();
-    const dataSaida = agora.toLocaleDateString();
-    const horaSaida = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    try{
+      const response = await axios.put("http://10.0.2.2:8080/api/veiculos/saida", {placa});
 
-    const [dia, mes, ano] = carro.data.split('/');
-    const [hora, minuto] = carro.hora.split(':');
+      setUltimaSaida(response.data.dados);
+      onConfirm?.(placa);
+    }
+    catch (error) {
+      console.error("Erro ao liberar saída: ", error);
+    }
+    // const carro = carros.find(c => c.placa === carro);
+    // if (!carro) return; 
+    
+    // axios.post("/saida", (rew, res) =>{ }
 
-    const entrada = new Date(ano, mes - 1, dia, hora, minuto);
+ 
 
-    const diffHoras = Math.ceil((agora - entrada) / 1000 / 60 / 60);
-    const preco = diffHoras * 10;
+    // const agora = new Date();
+    // const dataSaida = agora.toLocaleDateString();
+    // const horaSaida = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    setUltimaSaida({
-      placa: p,
-      dataEntrada: carro.data,
-      horaEntrada: carro.hora,
-      dataSaida,
-      horaSaida,
-      preco
-    });
+    // const [dia, mes, ano] = carro.data.split('/');
+    // const [hora, minuto] = carro.hora.split(':');
+
+    // const entrada = new Date(ano, mes - 1, dia, hora, minuto);
+
+    // const diffHoras = Math.ceil((agora - entrada) / 1000 / 60 / 60);
+    // const preco = diffHoras * 10;
+
+    // setUltimaSaida({
+    //   placa: p,
+    //   dataEntrada: carro.data,
+    //   horaEntrada: carro.hora,
+    //   dataSaida,
+    //   horaSaida,
+    //   preco
+    // });
 
 
-    setPlaca('');
-    setSuccess(true);
-    onConfirm(p);
-  }
+    // setPlaca('');
+    // setSuccess(true);
+    // onConfirm(p);
+  };
 
 
   return (
@@ -157,7 +182,7 @@ export default function ModalSaida({ visible, onConfirm, onCancel, carros = [] }
                   carros={carros}
                 />
                 <Button texto="Checkout" onPress={handleConfirm} />
-                {ultimaSaida.placa !== '' && (
+                {ultimaSaida && (
                   <SuccessBox>
                     <SuccessText>Checkout concluido</SuccessText>
                     <Divisoria source={divisoria} />
