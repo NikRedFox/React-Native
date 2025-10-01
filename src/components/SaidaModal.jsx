@@ -75,31 +75,14 @@ export default function ModalSaida({ visible, onConfirm, onCancel}) {
   const [carros, setCarros] = useState([]);
   const [placa, setPlaca] = useState('');
   const [showSuccess, setSuccess] = useState(false);
-  const [ultimaSaida, setUltimaSaida] = useState(null
-    // {
-    // placa: '',
-    // dataEntrada: '',
-    // horaEntrada: '',
-    // dataSaida: '',
-    // horaSaida: '',
-    // preco: 0
-    
-  // }
-  );
+  const [ultimaSaida, setUltimaSaida] = useState(null);
+  const [carregando, setCarregando] = useState(false);  
 
   useEffect(() => {
     if (!visible) {
       setPlaca("");
       setSuccess(false);
-      setUltimaSaida(null
-        // {
-        // placa: '',
-        // dataEntrada: '',
-        // horaEntrada: '',
-        // dataSaida: '',
-        // horaSaida: '',
-        // preco: 0}
-      );
+      setUltimaSaida(null);
     }
   }, [visible]);
 
@@ -118,20 +101,38 @@ export default function ModalSaida({ visible, onConfirm, onCancel}) {
     }
   }, [visible]);
 
+  // const handleConfirm = async () => {
+  //   if (!placa) return;
+
+  //   try{
+  //     const response = await api.put("api/veiculos/saida", {placa});
+
+  //     setUltimaSaida(response.data.dados);
+  //     onConfirm?.(placa);
+  //   }
+  //   catch (error) {
+  //     console.error("Erro ao liberar saída: ", error);
+  //   }    
+  // };
+
   const handleConfirm = async () => {
-    // const p = placa.trim();
-    if (!placa) return;
-
+    const p = placa.trim();
+    if (!p) return;
+    
     try{
-      const response = await api.put("api/veiculos/saida", {placa});
-
-      setUltimaSaida(response.data.dados);
-      onConfirm?.(placa);
+      setCarregando(true);
+      const response = await api.put("/api/veiculos/saida", {placa});
+      setUltimaSaida(response.data);
+      onConfirm?.();
     }
-    catch (error) {
-      console.error("Erro ao liberar saída: ", error);
-    }    
-  };
+    catch (error){
+      console.error("Erro ao liberar saida: ", error);
+    }
+    finally{
+      setCarregando(false);
+      setPlaca('');
+    }   
+  }
 
   return (
     <Modal transparent={true} visible={visible} animationType='slide' statusBarTranslucent={true}>
@@ -148,7 +149,7 @@ export default function ModalSaida({ visible, onConfirm, onCancel}) {
                   onValueChange={(value) => setPlaca(value)}
                   carros={carros}
                 />
-                <Button texto="Checkout" onPress={handleConfirm} />
+                <Button texto={carregando ? "Espere..." : "Checkout"} onPress={handleConfirm} />
                 {ultimaSaida && (
                   <SuccessBox>
                     <SuccessText>Checkout concluido</SuccessText>

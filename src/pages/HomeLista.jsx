@@ -114,12 +114,12 @@ export default function HomeLista() {
   }, []);
 
   const handleEntrada = async () => {   
-    setModalEntradaVisible(false);
+    // setModalEntradaVisible(false);
     await loadVeiculos();   
   };
 
   const handleSaida = async () => {    
-    setModalSaidaVisible(false);
+    // setModalSaidaVisible(false);
     await loadVeiculos();
   };
 

@@ -108,16 +108,7 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
     finally{
       setCarregando(false);
       setPlaca('');
-    }
-
-    // const agora = new Date();
-    // const data = agora.toLocaleDateString();
-    // const hora = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    // setUltimaEntrada({ placa: p, data, hora });
-    // onConfirm(p);
-    // setPlaca('');
-    // setSuccess(true);
+    }   
   }
 
   return (
@@ -137,7 +128,7 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
                     <Divisoria source={divisoria} />
                     <SuccessText>Placa: {ultimaEntrada.placa}</SuccessText>
                     <SuccessText>Entrada: {ultimaEntrada.dataEntrada}</SuccessText>
-                    <SuccessText>Hora: {ultimaEntrada.horaEntrada}</SuccessText>
+                    <SuccessText>Hora: {ultimaEntrada.horarioEntrada} </SuccessText>
                     <Divisoria source={divisoria} />
                   </SuccessBox>
                 )}
