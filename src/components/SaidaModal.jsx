@@ -1,6 +1,6 @@
 import { Modal, Text, TextInput, TouchableOpacity, View, ImageBackground, Image, FlatList, TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../api";
 import * as Font from 'expo-font';
 import styled from "styled-components/native";
 
@@ -112,7 +112,7 @@ export default function ModalSaida({ visible, onConfirm, onCancel}) {
 
   useEffect(() => {
     if(visible){
-      axios.get("http://10.105.80.130:8080/carros")
+      api.get("/api/veiculos")
       .then(res => setCarros(res.data))
       .catch(err => console.error("Erro ao carregar carros: ", err));
     }
@@ -123,48 +123,15 @@ export default function ModalSaida({ visible, onConfirm, onCancel}) {
     if (!placa) return;
 
     try{
-      const response = await axios.put("http://10.0.2.2:8080/api/veiculos/saida", {placa});
+      const response = await api.put("api/veiculos/saida", {placa});
 
       setUltimaSaida(response.data.dados);
       onConfirm?.(placa);
     }
     catch (error) {
       console.error("Erro ao liberar saída: ", error);
-    }
-    // const carro = carros.find(c => c.placa === carro);
-    // if (!carro) return; 
-    
-    // axios.post("/saida", (rew, res) =>{ }
-
- 
-
-    // const agora = new Date();
-    // const dataSaida = agora.toLocaleDateString();
-    // const horaSaida = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    // const [dia, mes, ano] = carro.data.split('/');
-    // const [hora, minuto] = carro.hora.split(':');
-
-    // const entrada = new Date(ano, mes - 1, dia, hora, minuto);
-
-    // const diffHoras = Math.ceil((agora - entrada) / 1000 / 60 / 60);
-    // const preco = diffHoras * 10;
-
-    // setUltimaSaida({
-    //   placa: p,
-    //   dataEntrada: carro.data,
-    //   horaEntrada: carro.hora,
-    //   dataSaida,
-    //   horaSaida,
-    //   preco
-    // });
-
-
-    // setPlaca('');
-    // setSuccess(true);
-    // onConfirm(p);
+    }    
   };
-
 
   return (
     <Modal transparent={true} visible={visible} animationType='slide' statusBarTranslucent={true}>
@@ -188,9 +155,9 @@ export default function ModalSaida({ visible, onConfirm, onCancel}) {
                     <Divisoria source={divisoria} />
                     <SuccessText>Placa: {ultimaSaida.placa}</SuccessText>
                     <SuccessText>Entrada: {ultimaSaida.dataEntrada}</SuccessText>
-                    <SuccessText>Hora: {ultimaSaida.horaEntrada}</SuccessText>
+                    <SuccessText>Hora: {ultimaSaida.horarioEntrada}</SuccessText>
                     <SuccessText>Saida: {ultimaSaida.dataSaida}</SuccessText>
-                    <SuccessText>Hora: {ultimaSaida.horaSaida}</SuccessText>
+                    <SuccessText>Hora: {ultimaSaida.horarioSaida}</SuccessText>
                     <SuccessText>Preço: R$ {ultimaSaida.preco},00</SuccessText>
                     <Divisoria source={divisoria} />
                   </SuccessBox>

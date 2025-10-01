@@ -2,7 +2,7 @@ import { Modal, Text, TextInput, TouchableOpacity, View, ImageBackground, Image,
 import { useState, useEffect } from "react";
 import * as Font from 'expo-font';
 import styled from "styled-components/native";
-import axios from "axios";
+import api from "../../api";
 
 import upperDetail from '../assets/upperDetail.png';
 import divisoria from '../assets/divisoriaLista.png';
@@ -98,7 +98,7 @@ export default function ModalEntrada({ visible, onConfirm, onCancel }) {
     
     try{
       setCarregando(true);
-      const response = await axios.post("http://10.0.2.2:8080/api/veiculos/entrada", {placa: p});
+      const response = await api.post("/api/veiculos/entrada", {placa});
       setUltimaEntrada(response.data.veiculo);
       onConfirm?.();
     }

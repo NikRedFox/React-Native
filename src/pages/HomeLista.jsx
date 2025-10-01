@@ -1,12 +1,14 @@
 import { Dimensions, Image, TouchableOpacity, View, Text, FlatList, Modal } from 'react-native';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
+import * as Font from 'expo-font';
+import api from '../../api.js';
+
 import backgroundImage from '../assets/mobileBg.png'
 import split from '../assets/buttonSplit.png';
 import divisoria from '../assets/divisoriaLista.png';
 import ModalEntrada from '../components/EntradaModal.jsx';
 import ModalSaida from '../components/SaidaModal.jsx';
-import * as Font from 'expo-font';
 
 const { width, height } = Dimensions.get('window');
 
@@ -78,13 +80,17 @@ const BglessButtonS = styled.Text`
 
 export default function HomeLista() {
   const [loaded, setLoaded] = useState(false)
-  const [carros, setCarros] = useState([]);
+  const [veiculos, setVeiculos] = useState([]);
   const [modalEntradaVisible, setModalEntradaVisible] = useState(false);
   const [modalSaidaVisible, setModalSaidaVisible] = useState(false);
-  const [placaSelecionada, setPlacaSelecionada] = useState('');
+  // const [placaSelecionada, setPlacaSelecionada] = useState('');
 
   const abrirModalEntrada = () => setModalEntradaVisible(true);
   const abrirModalSaida = () => setModalSaidaVisible(true);
+
+  const [item, setItem] = useState([
+
+  ])
 
   useEffect(() => {
     Font.loadAsync({
@@ -93,41 +99,37 @@ export default function HomeLista() {
     }).then(() => setLoaded(true));
   }, []);
 
+  const loadVeiculos = async () => {
+    try{
+      const response = await api.get('/api/veiculos');
+      setItem(response.data);
+    }
+    catch(error) {
+      console.error('Erro ao carregar veiculos: ', error);
+    }
+  };
 
   useEffect(() => {
-    const dadosFake = [
-      { id: '1', placa: 'ABC1234', data: '15/09/2025', hora: '14:30' },
-      { id: '2', placa: 'DEF5678', data: '15/09/2025', hora: '14:30' },
-      { id: '3', placa: 'GHI9101', data: '15/09/2025', hora: '14:30' },
-      { id: '4', placa: 'JKL1121', data: '15/09/2025', hora: '14:30' },
-      { id: '5', placa: 'MNO3141', data: '15/09/2025', hora: '14:30' },
-      { id: '6', placa: 'PQR5161', data: '15/09/2025', hora: '14:30' },
-    ];
+    loadVeiculos();
+  }, []);
 
-    setCarros(dadosFake);
-  }, [])
+  const handleEntrada = async () => {   
+    setModalEntradaVisible(false);
+    await loadVeiculos();   
+  };
+
+  const handleSaida = async () => {    
+    setModalSaidaVisible(false);
+    await loadVeiculos();
+  };
 
   if (!loaded) return null;
-
-  const handleEntrada = (placa) => {
-    const agora = new Date();
-    const data = agora.toLocaleDateString("pt-BR");
-    const hora = agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-
-    setCarros([...carros, { id: Date.now().toString(), placa, data, hora }]);
-    // setModalEntradaVisible(false);
-  };
-
-  const handleSaida = (placa) => {
-    setCarros(carros.filter(item => item.placa !== placa));
-    // setModalSaidaVisible(false);'
-  };
 
   const renderItem = ({ item }) => (
     <Card>
       <Placa>Placa:    {item.placa}</Placa>
-      <Info>Entrada:    {item.data}</Info>
-      <Info>Hora:         {item.hora}</Info>
+      <Info>Entrada:    {item.dataEntrada}</Info>
+      <Info>Hora:         {item.horarioEntrada}</Info>
     </Card>
   )
 
@@ -136,8 +138,8 @@ export default function HomeLista() {
       <Texto>Lista</Texto>
       <View style={{ flex: 1 }}>
         <FlatList
-          data={carros}
-          keyExtractor={(item) => item.id}
+          data={item}
+          keyExtractor={(_, index) => index.toString()}
           renderItem={renderItem}
           ItemSeparatorComponent={() => (
             <Divisoria
@@ -161,21 +163,17 @@ export default function HomeLista() {
 
       <ModalEntrada
         visible={modalEntradaVisible}
-        onConfirm={(placa) => handleEntrada(placa)}
+        onConfirm={handleEntrada}
         onCancel={() => setModalEntradaVisible(false)}
-        carros={carros}
       />
 
       <ModalSaida
         visible={modalSaidaVisible}
-        onConfirm={(placa) => handleSaida(placa)}
+        onConfirm={handleSaida}
         onCancel={() => setModalSaidaVisible(false)}
-        carros={carros}
+        veiculos={veiculos}
       />
     </ListaContainer>
-
-
-
   )
 };
 
