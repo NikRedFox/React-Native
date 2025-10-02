@@ -1,11 +1,14 @@
 import { Dimensions } from 'react-native';
 import { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import * as Font from 'expo-font';
 import styled from 'styled-components/native';
+import api from '../../api.js';
+
 import backgroundImage from '../assets/mobileBg.png'
 import InputProps from '../components/Input.jsx';
 import InputPropsSecure from '../components/InputSecure.jsx';
 import Button from '../components/Button.jsx'
-import * as Font from 'expo-font';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,6 +36,13 @@ const ButtonWrapper = styled.View`
 
 export default function Cadastro() {
   const [loaded, setLoaded] = useState(false);
+  const [nome, setNome] = useState('');
+  const [senha, setSenha] = useState('');
+  const [email, setEmail] = useState('');
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState('');
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     Font.loadAsync({
@@ -43,13 +53,44 @@ export default function Cadastro() {
 
   if (!loaded) return null;
 
+  const handleCadastro = async () => {
+    if (!nome || !senha || !email) {
+      setErro("Preencha todos os campos");
+      return;
+    }
+    try {
+      setCarregando(true);
+      setErro('');
+
+      const response = await api.post("auth/register", {
+        nome: nome,
+        senha: senha,
+        email: email
+      });
+
+      console.log("Cadastro OK:", response.data);
+
+      navigation.navigate("Login");
+
+    } catch (e) {
+      console.error("Erro no cadastro:", e.response?.data || e.message);
+      setErro("Erro ao cadastrar, tente novamente.");
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+
   return (
     <CadastroContainer source={backgroundImage} resizeMode='cover'>
       <Texto>Cadastro</Texto>
       <InputContainer>
-        <InputProps placeholder="Login" />
-        <InputPropsSecure placeholder="Senha" />
-        <InputProps placeholder="Email" />
+        <InputProps placeholder="nome" value={nome} onChangeText={setNome} />
+        <InputPropsSecure placeholder="Senha" value={senha} onChangeText={setSenha} />
+        <InputProps placeholder="Email" value={email} onChangeText={setEmail} />
+        <InputProps placeholder="Login" value={login} onChangeText={setLogin} />
+        <InputPropsSecure placeholder="Senha" value={senha} onChangeText={setSenha} />
+        <InputProps placeholder="Email" value={email} onChangeText={setEmail} />
       </InputContainer>
 
       <ButtonWrapper>

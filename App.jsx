@@ -16,9 +16,9 @@ const Container = styled.SafeAreaView`
   background-color: #151517;
 `
 const RootStack = createNativeStackNavigator({
-  initialRouteName: 'HomeLista',
+  initialRouteName: 'Login',
   screens: {
-    // Login:  Login,
+    Login:  Login,
     // Cadastro: Cadastro,
     HomeLista: HomeLista
   },
